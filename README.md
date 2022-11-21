@@ -2,7 +2,7 @@
 
 Construção de uma calculadora científica 
 
- - Requisitos mínimos
+        Requisitos mínimos
 
 
 ● Possuir as 4 operações básicas; 
