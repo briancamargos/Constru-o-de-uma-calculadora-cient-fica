@@ -3,6 +3,8 @@
 Construção de uma calculadora científica 
 
  - Requisitos mínimos
+
+
 ● Possuir as 4 operações básicas; 
 
 ● Implementar operações matemáticas complexas (Sen, Cos, Tg, etc.); 
