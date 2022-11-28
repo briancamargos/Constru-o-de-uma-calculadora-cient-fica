@@ -1,6 +1,6 @@
 #O método usado para calcular o seno, foi série de taylor
 
-def seno(graus = float): # a função será montada presupondo que o angulo "a" de entrada está em graus.
+def Seno(graus:float): # a função será montada presupondo que o angulo "a" de entrada está em graus.
     
     rads = (graus*3.141592653)/180 #conversão de graus para radiano
     
