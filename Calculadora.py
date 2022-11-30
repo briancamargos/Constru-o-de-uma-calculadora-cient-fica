@@ -8,6 +8,7 @@ from raiz import Raiz
 from seno import Seno
 from cosseno import Cosseno
 from tangente import Tangente
+from raizequacao import Raizequacao
 
 sg.theme('Dark Blue 3')   # Tema da GUI
 
@@ -17,7 +18,7 @@ layout =    [
             [sg.Button('1', size = (6, 3)), sg.Button('2', size = (6, 3)), sg.Button('3', size = (6, 3)), sg.Button('Apagar', size = (6, 3)), sg.Button('+', size = (6, 3)), sg.Button('-', size = (6, 3)), sg.Button('x', size = (6, 3)), sg.Button('/', size = (6, 3))],
             [sg.Button('4', size = (6, 3)), sg.Button('5', size = (6, 3)), sg.Button('6', size = (6, 3)), sg.Button('Limpar', size = (6, 3)), sg.Button('potencia', size = (14, 3)), sg.Button('raiz', size = (14, 3))],
             [sg.Button('7', size = (6, 3)), sg.Button('8', size = (6, 3)), sg.Button('9', size = (6, 3)), sg.Button('.', size = (6, 3)), sg.Button('seno', size = (8, 3)), sg.Button('cosseno', size = (8, 3)), sg.Button('tangente', size = (8, 3))], 
-            [sg.Button('0', size = (6, 3)), sg.Button('=', size = (15, 3))] 
+            [sg.Button('0', size = (6, 3)), sg.Button('=', size = (15, 3)),sg.Text('    ',size = (6, 5)), sg.Button('Raízes da equação', size = (15, 3))] 
             ]
 
 # Cria a janela
@@ -32,17 +33,23 @@ Aux1 = 0
 ponto = True
 nao_numero = True
 Result = False
+CalcRaizes = False
+x1,x2 = '',''
 
 def ligaOp(j):
-    list = ['+','-','x','/','raiz','potencia','seno','cosseno','tangente']
+    list = ['+','-','x','/','raiz','potencia','seno','cosseno','tangente','Raízes da equação']
+    for i in list:
+         window[i].update(disabled=j)
+def ligaOp2(j):
+    list = ['+','x','/','raiz','potencia','seno','cosseno','tangente','Raízes da equação']
     for i in list:
          window[i].update(disabled=j)
 def Botauns(j):
-    list = ['+','-','x','/','raiz','potencia','seno','cosseno','tangente','1','2','3','4','5','6','7','8','9','0','.','Apagar','=']
+    list = ['+','-','x','/','raiz','potencia','seno','cosseno','tangente','1','2','3','4','5','6','7','8','9','0','.','Apagar','=','Raízes da equação']
     for i in list:
          window[i].update(disabled=j)
 
-
+    
 # Loop que registra os eventos na janela e registra os inputs e tal
 
 while True:
@@ -54,7 +61,6 @@ while True:
     
     # registra os botões da calculadora
     Fim_numero = False
-    Result = False
     if Aux1 == 1:
         ligaOp(True)
     
@@ -96,7 +102,7 @@ while True:
                 continue
     
     #casos que o usuario digite uma das operações
-    elif event == '+' or event == '-'or event == 'x'or event == '/' or event == 'raiz' or event == 'potencia':
+    elif (event == '+' or event == '-' or event == 'x'or event == '/' or event == 'raiz' or event == 'potencia') and CalcRaizes == False:
         ponto = True
         Fim_numero = True
         Aux1 = 1
@@ -113,12 +119,19 @@ while True:
             Operacao = ' raiz de '
         elif event == 'potencia':
             Operacao = ' elevado à '
+
+    elif event == '-' and CalcRaizes == True:
+        if Entradas_Numeros == []:
+            Entradas_Numeros.append('-')
+        else:
+            continue
     
     elif event == 'seno'or event == 'cosseno'or event == 'tangente':  
         ponto = True
         Fim_numero = True
         Aux1 = 1
         ligaOp(True)
+        Entradas_Numeros = []
         if event == 'seno':
             Operacao = ' seno de '     
         elif event == 'cosseno':
@@ -132,6 +145,10 @@ while True:
         Numero = []
         Botauns(False)
         Aux1 = 0
+        CalcRaizes = False
+        Result = False
+        Coef = []
+        Etapa = 0
             
     #verifica se o usuario digitou uma operação ou numero
     if Fim_numero:
@@ -151,8 +168,8 @@ while True:
     # evento que chama as funçoes de operação para as funções baseado no string que o usuario montou 
     # clicar nos botões da calculadora
     Resultado = '    '
-    if event == '=':
-        Result = True
+    if event == '=' and CalcRaizes == False:
+        Result = 'conta'
         Botauns(True)
         try:
             Numero.append(''.join(Entradas_Numeros))
@@ -179,23 +196,61 @@ while True:
                 elif Numero[1] == ' raiz de ':
                     Resultado = Raiz(N1,N2)
                 elif Numero[1] == ' elevado à ':
-                    Resultado = Potencia(N1,N2)
-                
-            
+                    Resultado = Potencia(N1,N2)     
         except:
             Numero = 'ERRO'
-            
+
+    if event == 'Raízes da equação':
+        Entradas_Numeros = []
+        Numero = []
+        ligaOp2(True)
+        CalcRaizes = True
+        Result = 'Raizes'
+        Etapa = 1
+        Coef = []
 
 
+    if event == '=' and CalcRaizes == True:
+        if Etapa <= 3:
+            Etapa += 1
+            Entradas_Numeros = ''.join(Entradas_Numeros)
+            Coef.append(Entradas_Numeros)
+            Entradas_Numeros = []
+        elif Etapa > 3:
+            Etapa += 1
+            C1 = float(Coef[0])
+            C2 = float(Coef[1])
+            C3 = float(Coef[2])
+            x1,x2 = Raizequacao(C1,C2,C3)
 
     #monta o string com as informações para o usuario
-    if Result:
+    if Result == 'conta':
         
         TELA = ''.join(Numero) + '         =       ' + str(Resultado)
+    
+    elif Result == 'Raizes':
         
+        if Etapa == 1:
+            auxTELA = 'Digite o valor do coeficiente A da equação da forma ax²+bx+c e pressione "="                          A =  '
+            TELA = auxTELA + ''.join(Entradas_Numeros)
+        elif Etapa == 2:
+            auxTELA = 'Digite o valor do coeficiente B da equação da forma ax²+bx+c e pressione "="                          B =  '
+            TELA = auxTELA + ''.join(Entradas_Numeros)
+        elif Etapa == 3:
+            auxTELA = 'Digite o valor do coeficiente C da equação da forma ax²+bx+c e pressione "="                          C =  '
+            TELA = auxTELA + ''.join(Entradas_Numeros)
+        elif Etapa == 4:
+            TELA = 'Pressione " = " '
+        else:
+            auxTELA = ('O valor das raizes da equação são:    ' + str(x1) + '     ' + str(x2))
+            TELA = auxTELA  
+
     else:
         auxTELA = ''.join(Entradas_Numeros)
         TELA = ''.join(Numero) + ''.join(auxTELA)
+
+
+    
 
 
     #atualiza a tela
@@ -203,7 +258,7 @@ while True:
     
 
 
-    print(Numero)
-    print(Resultado)
+   
+    
 
 window.close()

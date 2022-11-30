@@ -14,4 +14,4 @@ def Raizequacao(a:float,b:float,c:float): #pensei aqui em pedir os indices a,b,c
         x2 = x1
         return x1,x2
     else: #caso delta seja menor que 0, não haverá raízes reais
-        return "Não existem raízes reais" #pensar aqui como retornar esse erro
+        return "Não existem raízes reais"," " #pensar aqui como retornar esse erro
